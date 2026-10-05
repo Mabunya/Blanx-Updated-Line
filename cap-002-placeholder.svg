@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#d9d3c8"/>
+  <path fill="#2a2a2a" d="M170 430c0-150 95-245 230-245s230 95 230 245v18H170v-18Zm0 18H78c0 73 76 112 180 112h372v-112H170Z"/>
+  <path fill="#b77d4d" d="M170 448h460v55H170z"/>
+  <text x="400" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" letter-spacing="8" fill="#2a2a2a">BLANX / DAD CAP</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#c6b8a3"/>
+  <path fill="#454545" d="M245 176c0-45 42-76 94-76h122c52 0 94 31 94 76v55l89 55v79h-51v235c0 29-25 47-55 47H262c-30 0-55-18-55-47V365h-51v-79l89-55v-55Z"/>
+  <path fill="#222" d="M339 101c0 65 35 98 61 98s61-33 61-98h-44c0 30-7 49-17 49s-17-19-17-49h-44Z"/>
+  <text x="400" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" letter-spacing="8" fill="#454545">BLANX / PULLOVER</text>
+</svg>

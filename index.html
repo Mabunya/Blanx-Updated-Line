@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BLANX — Clean pieces. No noise.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+<!-- Header, footer, cart drawer, modal and search are injected by assets/js/ui.js -->
+<main>
+  <section class="hero">
+    <p class="hero-kicker">BLANX / NAIROBI</p>
+    <h1>Welcome to<br>the canvas.</h1>
+    <p class="hero-note">We make clean pieces for people tired of noise: considered fits, honest materials, nothing chasing a trend. Built in Nairobi, worn everywhere.</p>
+    <a href="#shop" class="btn-solid">SEE THE DROP</a>
+  </section>
+
+  <section class="section shop-section" id="shop">
+    <div class="shop-header">
+      <h2 class="section-title">SHOP</h2>
+    </div>
+
+    <nav class="shop-categories" aria-label="Shop categories">
+      <a href="#shop" class="active">ALL</a>
+      <a href="#capsSection">CAPS</a>
+      <a href="#sneakersSection">SNEAKERS</a>
+      <a href="#hoodiesSection">HOODIES</a>
+      <a href="#teesSection">TEES</a>
+      <a href="#jacketsSection">JACKETS</a>
+    </nav>
+
+    <div class="category-block" id="capsSection" data-category="caps">
+      <div class="category-head">
+        <h3>CAPS</h3>
+        <p>The piece that finishes a fit before anyone sees the rest of it.</p>
+      </div>
+      <div class="product-grid" id="capsGrid"></div>
+    </div>
+
+    <div class="category-block" id="sneakersSection" data-category="sneakers">
+      <div class="category-head">
+        <h3>SNEAKERS</h3>
+        <p>Built for pavement. Styled for everywhere else.</p>
+      </div>
+      <div class="product-grid" id="sneakersGrid"></div>
+    </div>
+
+    <div class="category-block" id="hoodiesSection" data-category="hoodies">
+      <div class="category-head">
+        <h3>HOODIES</h3>
+        <p>Heavyweight, cut to drape — not the one that shrinks on the second wash.</p>
+      </div>
+      <div class="product-grid" id="hoodiesGrid"></div>
+    </div>
+
+    <div class="category-block" id="teesSection" data-category="tees">
+      <div class="category-head">
+        <h3>TEES</h3>
+        <p>The layer under everything. If this isn't right, nothing else matters.</p>
+      </div>
+      <div class="product-grid" id="teesGrid"></div>
+    </div>
+
+    <div class="category-block" id="jacketsSection" data-category="jackets">
+      <div class="category-head">
+        <h3>JACKETS</h3>
+        <p>For the days the weather doesn't ask permission.</p>
+      </div>
+      <div class="product-grid" id="jacketsGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="lookbook">
+    <p class="lookbook-kicker">BLANX / IN MOTION</p>
+    <h2 class="section-title">THE FILM BOOK</h2>
+    <div class="lookbook" id="lookbookGrid"></div>
+  </section>
+
+  <section class="section about" id="about">
+    <h2 class="section-title">ABOUT</h2>
+    <div class="about-copy">
+      <p>We started BLANX because we were tired of buying into brands that had nothing to say. Every piece here is something we'd actually wear: considered, not chased off a trend cycle. We work in small runs on purpose, for less waste, better quality control, and drops that still feel like drops when they land.</p>
+      <p>Every order is confirmed by a real person on WhatsApp before it ships, never a bot or an automated email. Need help with fit or colour? Message us and we'll talk it through. That's the whole philosophy: fewer things, done properly, by people who'll actually talk to you.</p>
+    </div>
+  </section>
+
+  <section class="section footer-cta" aria-label="Footer call to action">
+    <div class="footer-cta-inner">
+      <div>
+        <p class="hero-kicker">STAY IN THE LOOP</p>
+        <h2>Need a fit check or a quick order update?</h2>
+      </div>
+      <a href="https://wa.me/254104273995" class="btn-solid" target="_blank" rel="noopener noreferrer">CONTACT US</a>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/data/products.js"></script>
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/data/store.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/pages/home.js"></script>
+</body>
+</html>
