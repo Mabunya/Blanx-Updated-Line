@@ -37,7 +37,25 @@ function handleSearch(q){const r=document.getElementById('searchResults'),m=PROD
 
 document.querySelectorAll('.shop-categories a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const f=a.dataset.filter||'all';document.querySelectorAll('.shop-categories a').forEach(x=>x.classList.remove('active'));a.classList.add('active');renderProducts(f);if(f!=='all')document.getElementById(f+'Section')?.scrollIntoView({behavior:'smooth',block:'start'})}));
 
-document.getElementById('lookbookGrid').innerHTML=['hoodies','sneakers','tees'].map(c=>{const p=PRODUCTS.find(x=>x.category===c);if(!p)return '';return `<article class="look-card"><div class="look-card-image"><div class="look-piece">${productVisual(p)}</div></div><div class="look-card-copy"><h3>${c.toUpperCase()}</h3><div class="look-shop-label">SHOP</div><div class="look-card-links"><a href="#${c}Section">${p.name}</a></div></div></article>`}).join('');
+function renderLookbook(){
+  const grid=document.getElementById('lookbookGrid');
+  if(!grid)return;
+  const looks=[
+    {category:'hoodies',title:'THE EVERYDAY LAYER',count:3},
+    {category:'sneakers',title:'BUILT FOR THE PAVEMENT',count:3},
+    {category:'tees',title:'THE FOUNDATION',count:3}
+  ];
+  grid.innerHTML=looks.map(look=>{
+    const products=PRODUCTS.filter(p=>p.category===look.category);
+    if(!products.length)return '';
+    const lead=products[0];
+    const pieces=products.slice(0,look.count).flatMap(p=>{
+      const urls=(p.imageUrls&&p.imageUrls.length?p.imageUrls:[p.imageUrl]).filter(Boolean);
+      return urls.slice(0,1).map(url=>`<button class="look-piece" type="button" aria-label="View ${p.name}" onclick="openProduct('${p.id}')"><img src="${url}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML=iconSvg('${p.icon}','${p.colors?.[0]||'#111'}')"></button>`);
+    });
+    return `<article class="look-card"><div class="look-card-image" style="--look-piece-count:${pieces.length||1}">${pieces.join('')}</div><div class="look-card-copy"><h3>${look.title}</h3><div class="look-shop-label">SHOP THE LOOK</div><div class="look-card-links">${products.slice(0,look.count).map(p=>`<a href="#" onclick="event.preventDefault();openProduct('${p.id}')">${p.name}</a>`).join('')}</div></div></article>`;
+  }).join('');
+}
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeCart();const s=document.getElementById('searchOverlay');if(s?.classList.contains('open'))s.classList.remove('open')}});
-renderProducts();renderCart();
+renderProducts();renderLookbook();renderCart();
