@@ -39,7 +39,8 @@ document.body.insertAdjacentHTML("afterbegin", `
     <button class="modal-close" onclick="closeModal()">×</button>
     <div class="modal-content" id="modalContent"></div>
   </div>
-</div>
+</div>`);
+document.body.insertAdjacentHTML("beforeend", `
 <footer class="site-footer" id="contact">
   <div class="footer-inner">
     <div><span class="logo">BLANX</span><p>Clean pieces. No noise. Nairobi-made, worldwide-influenced.</p></div>
