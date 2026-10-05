@@ -46,16 +46,11 @@ so the four HTML files only hold their own content.
 |---|---|
 | Add / edit a product | `assets/js/data/products.js` (or Sanity once enabled) |
 | Use my own product photo | Put it in `assets/images/products/`, then `imageUrl: "assets/images/products/x.jpg"` |
-| Add a lookbook film | Put the video in `assets/images/lookbook/`, then add its details to `LOOKBOOK_VIDEOS` in `assets/js/pages/home.js` |
 | Change WhatsApp number | `assets/js/config.js` |
 | Change header/footer/nav links | `layoutTop()` / `layoutBottom()` in `assets/js/ui.js` |
 | Change colours, fonts | `:root` in `assets/css/main.css` |
 | Add a new page | New file in `pages/`, copy `cart.html`, add `<script>` in `assets/js/pages/` |
 | Turn on Sanity | `config.js`: set `projectId`, `enabled: true`; add your site URL to Sanity CORS |
-
-Lookbook films are shown as vertical, playable video cards. Add an entry to `LOOKBOOK_VIDEOS` with a
-`title`, a relative `video` path, and optional `poster`, `caption`, and product IDs in `products`.
-For example: `{ title: "After hours", video: "assets/images/lookbook/after-hours.mp4", poster: "assets/images/lookbook/after-hours.jpg", caption: "Everyday layers, after dark.", products: ["cap-001", "hoodie-001"] }`.
 
 ## M-Pesa (Daraja sandbox)
 
