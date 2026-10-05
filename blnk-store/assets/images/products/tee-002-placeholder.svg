@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#d8ddd3"/>
+  <path fill="#1b1b1b" d="M242 174 360 135c10 35 24 51 40 51s30-16 40-51l118 39 116 117-78 99-57-38v252H261V352l-57 38-78-99 116-117Z"/>
+  <path fill="#7b8a7a" d="M360 135c10 35 24 51 40 51s30-16 40-51l-37-14h-6l-37 14Z"/>
+  <text x="400" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" letter-spacing="8" fill="#1b1b1b">BLANX / DRIFT TEE</text>
+</svg>

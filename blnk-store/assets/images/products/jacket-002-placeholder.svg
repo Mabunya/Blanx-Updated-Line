@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#c9c0b2"/>
+  <path fill="#4a5a3a" d="M242 160 360 125l40 68 40-68 118 35 116 125-69 82-55-45v242H250V322l-55 45-69-82 116-125Z"/>
+  <path fill="#111" d="M394 193h12v364h-12zM260 305h88v70h-88zM452 305h88v70h-88z"/>
+  <text x="400" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" letter-spacing="8" fill="#4a5a3a">BLANX / OVERSHIRT</text>
+</svg>

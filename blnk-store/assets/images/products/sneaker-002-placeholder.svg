@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#d9d9d5"/>
+  <path fill="#252525" d="M90 510v-70c0-31 28-49 63-49h112l71-102c13-19 42-25 64-10l68 47c37 29 84 54 135 70l84 27c39 13 54 39 54 77v30c0 39-21 57-61 57H130c-27 0-40-19-40-77Z"/>
+  <path fill="#d9b57d" d="M105 542h617v42H105z"/>
+  <path fill="#f2efe9" d="M266 391h80l-35 56h-87z"/>
+  <text x="400" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" letter-spacing="8" fill="#252525">BLANX / MOTION</text>
+</svg>
