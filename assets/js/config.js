@@ -1,0 +1,1 @@
+window.BLNX_CONFIG={whatsapp:'254104273995'};

@@ -1,0 +1,1 @@
+window.BLNX_STORE={name:'BLANX',currency:'KES',location:'Nairobi'};

@@ -1,0 +1,1 @@
+window.BLNX_CART=JSON.parse(localStorage.getItem('blnk-cart')||'[]');window.saveBLNXCart=function(){localStorage.setItem('blnk-cart',JSON.stringify(window.BLNX_CART))};
