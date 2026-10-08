@@ -52,8 +52,20 @@ const openWhatsApp = msg => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=$
 
 function showStatus(title, text, kind) {
   const el = document.getElementById("paymentStatus");
-  el.className = `payment-status ${kind || ""}`; el.style.display = "block";
-  el.innerHTML = `<strong>${title}</strong><span>${text}</span>`;
+  el.className = `payment-status ${kind || ""}`;
+  el.style.display = "block";
+  el.replaceChildren();
+
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+  const message = document.createElement("span");
+  message.textContent = text;
+  el.append(heading, message);
+}
+
+function setCheckoutPending(pending) {
+  const button = document.querySelector('#checkoutForm button[type="submit"]');
+  if (button) button.disabled = pending;
 }
 
 function startPolling(orderId, phone, customer) {
@@ -68,16 +80,26 @@ function startPolling(orderId, phone, customer) {
 
       if (data.status === "paid") {
         clearInterval(pollingTimer);
-        showStatus("✅ PAYMENT RECEIVED", `M-Pesa receipt: ${data.receipt}. Sending you to WhatsApp…`, "success");
-        setTimeout(() => {
-          openWhatsApp(buildWhatsAppMessage(orderId, customer, "M-Pesa (paid)", data.receipt));
+        pollingTimer = null;
+        showStatus("✅ PAYMENT RECEIVED", `M-Pesa receipt: ${data.receipt}. Send your order details to BLANX to confirm delivery.`, "success");
+        const whatsappLink = document.createElement("a");
+        whatsappLink.className = "btn-wa-modal";
+        whatsappLink.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(orderId, customer, "M-Pesa (paid)", data.receipt))}`;
+        whatsappLink.target = "_blank";
+        whatsappLink.rel = "noopener noreferrer";
+        whatsappLink.textContent = "SEND ORDER DETAILS ON WHATSAPP";
+        whatsappLink.addEventListener("click", () => {
           clearCart();
-        }, 1500);
+          setCheckoutPending(false);
+        }, { once: true });
+        document.getElementById("paymentStatus").append(whatsappLink);
         return;
       }
       if (data.status === "failed") {
         clearInterval(pollingTimer);
+        pollingTimer = null;
         showStatus("❌ PAYMENT FAILED", "You cancelled or the payment failed. Try again or use WhatsApp.", "error");
+        setCheckoutPending(false);
         return;
       }
       showStatus("⏳ WAITING FOR M-PESA", `Check your phone (${phone}) and enter your M-Pesa PIN. (${attempts}/${MAX})`);
@@ -85,7 +107,9 @@ function startPolling(orderId, phone, customer) {
 
     if (attempts >= MAX) {
       clearInterval(pollingTimer);
+      pollingTimer = null;
       showStatus("⏱ TIMED OUT", "We didn't receive confirmation. Pay again or message us on WhatsApp.", "error");
+      setCheckoutPending(false);
     }
   }, 3000);
 }
@@ -105,6 +129,7 @@ async function handleMpesaPayment(customer) {
     const data = await res.json();
     if (!res.ok || !data.ok) {
       showStatus("❌ COULD NOT SEND PROMPT", data.error || "Try again, or choose Cash on Delivery.", "error");
+      setCheckoutPending(false);
       return;
     }
     showStatus("📲 M-PESA PROMPT SENT", `Check your phone (${customer.phone}) and enter your PIN.`);
@@ -112,18 +137,25 @@ async function handleMpesaPayment(customer) {
   } catch (err) {
     console.error(err);
     showStatus("❌ NETWORK ERROR", "Could not reach the payment server. Try again.", "error");
+    setCheckoutPending(false);
   }
 }
 
 async function submitCheckout(e) {
   e.preventDefault();
+  const form = e.currentTarget;
+  if (form.querySelector('button[type="submit"]')?.disabled) return;
   if (!cart.length) { alert("Your cart is empty. Add something first."); return; }
 
   const customer = getCustomer();
   const payment = document.querySelector('input[name="payment"]:checked').value;
 
-  if (payment === "M-Pesa") await handleMpesaPayment(customer);
-  else openWhatsApp(buildWhatsAppMessage(generateOrderId(), customer, payment, null));
+  if (payment === "M-Pesa") {
+    setCheckoutPending(true);
+    await handleMpesaPayment(customer);
+  } else {
+    openWhatsApp(buildWhatsAppMessage(generateOrderId(), customer, payment, null));
+  }
 }
 
 document.addEventListener("DOMContentLoaded", renderCheckoutSummary);

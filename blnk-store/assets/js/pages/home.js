@@ -1,6 +1,7 @@
 /* HOME — one product grid with category filters */
 const homeCategories = ["caps", "sneakers", "hoodies", "tees", "jackets"];
 const LOOKBOOK_VIDEOS = [];
+const LOOKBOOK_SLIDE_LIMIT = 5;
 
 function renderProductCard(p) {
   return `
@@ -43,7 +44,8 @@ function renderLookbook() {
   const grid = document.getElementById("lookbookGrid");
   if (!grid) return;
 
-  if (!LOOKBOOK_VIDEOS.length) {
+  const slides = LOOKBOOK_VIDEOS.slice(0, LOOKBOOK_SLIDE_LIMIT);
+  if (!slides.length) {
     grid.innerHTML = `
       <div class="lookbook-empty">
         <p class="lookbook-empty-kicker">BLANX / IN MOTION</p>
@@ -52,17 +54,20 @@ function renderLookbook() {
     return;
   }
 
-  grid.innerHTML = LOOKBOOK_VIDEOS.map((look, index) => {
+  grid.innerHTML = `
+    <div class="lookbook-carousel" role="region" aria-roledescription="carousel" aria-label="Lookbook videos">
+      <div class="lookbook-slides">
+        ${slides.map((look, index) => {
     const pieces = (look.products || []).map(id => PRODUCTS.find(product => product.id === id)).filter(Boolean);
     const poster = look.poster ? ` poster="${BLANX.base}${look.poster}"` : "";
     return `
-      <article class="look-card">
+      <article class="look-card" role="group" aria-roledescription="slide" aria-label="${index + 1} of ${slides.length}" data-lookbook-slide="${index}"${index === 0 ? "" : " hidden"}>
         <div class="look-video-frame">
           <video controls playsinline preload="metadata"${poster} aria-label="${look.title}">
             <source src="${BLANX.base}${look.video}">
             Your browser does not support video playback.
           </video>
-          <span class="look-video-index">BLANX FILM / ${String(index + 1).padStart(2, "0")}</span>
+          <span class="look-video-index">BLANX FILM / ${String(index + 1).padStart(2, "0")} OF ${String(slides.length).padStart(2, "0")}</span>
         </div>
         <div class="look-card-copy">
           <h3>${look.title}</h3>
@@ -74,7 +79,42 @@ function renderLookbook() {
             </div>` : ""}
         </div>
       </article>`;
-  }).join("");
+  }).join("")}
+      </div>
+      ${slides.length > 1 ? `
+        <div class="lookbook-controls" aria-label="Lookbook slide controls">
+          <button class="lookbook-arrow" type="button" data-lookbook-previous aria-label="Previous video">PREVIOUS</button>
+          <div class="lookbook-pagination" aria-label="Choose a video">
+            ${slides.map((look, index) => `
+              <button class="lookbook-dot${index === 0 ? " active" : ""}" type="button" data-lookbook-go="${index}" aria-label="Show video ${index + 1}" aria-current="${index === 0 ? "true" : "false"}"></button>`).join("")}
+          </div>
+          <button class="lookbook-arrow" type="button" data-lookbook-next aria-label="Next video">NEXT</button>
+        </div>` : ""}
+    </div>`;
+
+  if (slides.length < 2) return;
+
+  let activeIndex = 0;
+  const carousel = grid.querySelector(".lookbook-carousel");
+  const slideElements = [...carousel.querySelectorAll("[data-lookbook-slide]")];
+  const dots = [...carousel.querySelectorAll("[data-lookbook-go]")];
+
+  function showSlide(index) {
+    slideElements[activeIndex].querySelector("video").pause();
+    activeIndex = (index + slideElements.length) % slideElements.length;
+    slideElements.forEach((slide, slideIndex) => {
+      slide.hidden = slideIndex !== activeIndex;
+    });
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === activeIndex;
+      dot.classList.toggle("active", active);
+      dot.setAttribute("aria-current", String(active));
+    });
+  }
+
+  carousel.querySelector("[data-lookbook-previous]").addEventListener("click", () => showSlide(activeIndex - 1));
+  carousel.querySelector("[data-lookbook-next]").addEventListener("click", () => showSlide(activeIndex + 1));
+  dots.forEach((dot, index) => dot.addEventListener("click", () => showSlide(index)));
 }
 
 function setupPageMotion() {
@@ -89,7 +129,7 @@ function setupPageMotion() {
   }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
 
   const targets = document.querySelectorAll(
-    ".section-title, .category-head, .product, .look-card, .about-copy p, .footer-cta-inner, .service-item, .footer-column"
+    ".section-title, .category-head, .product, .look-card:not([hidden]), .about-copy p, .footer-cta-inner, .service-item, .footer-column"
   );
   targets.forEach((target, index) => {
     const position = target.matches(".product, .look-card, .service-item, .footer-column")
