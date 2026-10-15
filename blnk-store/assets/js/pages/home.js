@@ -2,6 +2,8 @@
 const homeCategories = ["caps", "sneakers", "hoodies", "tees", "jackets"];
 const LOOKBOOK_VIDEOS = [];
 const LOOKBOOK_SLIDE_LIMIT = 5;
+let homeSort = "featured";
+let homeSize = "";
 
 function renderProductCard(p) {
   return `
@@ -18,25 +20,95 @@ function renderProductCard(p) {
     </article>`;
 }
 
-function renderHomeGrid(category = "all") {
-  homeCategories.forEach(sectionCategory => {
-    const grid = document.getElementById(`${sectionCategory}Grid`);
-    if (!grid) return;
-    const list = PRODUCTS.filter(product => {
-      const productCategory = String(product.category || "").toLowerCase();
-      return productCategory === sectionCategory && (category === "all" || productCategory === category);
-    });
-    grid.innerHTML = list.map(renderProductCard).join("");
+function renderHomeGrid() {
+  const selectedCategories = new Set(
+    [...document.querySelectorAll('input[name="shopCategory"]:checked')].map(input => input.value)
+  );
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
+  const list = PRODUCTS.filter(product => {
+    const productCategory = String(product.category || "").toLowerCase();
+    const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+    return selectedCategories.has(productCategory)
+      && (!homeSize || sizes.some(size => String(size).toLowerCase() === homeSize.toLowerCase()));
+  });
+
+  if (homeSort === "price-asc") list.sort((a, b) => Number(a.price) - Number(b.price));
+  if (homeSort === "price-desc") list.sort((a, b) => Number(b.price) - Number(a.price));
+  if (homeSort === "name-asc") list.sort((a, b) => a.name.localeCompare(b.name));
+
+  grid.innerHTML = list.map(renderProductCard).join("");
+
+  const resultCountElement = document.getElementById("shopResultCount");
+  const emptyState = document.getElementById("shopEmpty");
+  if (resultCountElement) resultCountElement.textContent = `${list.length} ${list.length === 1 ? "piece" : "pieces"}`;
+  if (emptyState) emptyState.hidden = list.length > 0;
+
+  const categoryButtons = document.querySelectorAll(".shop-categories [data-category]");
+  const allSelected = selectedCategories.size === homeCategories.length;
+  categoryButtons.forEach(button => {
+    const category = button.dataset.category;
+    const active = category === "all"
+      ? allSelected
+      : selectedCategories.size === 1 && selectedCategories.has(category);
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
   });
 }
 
-function setupCategoryFilters() {
-  document.querySelectorAll(".shop-categories [data-filter]").forEach(button => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll(".shop-categories [data-filter]").forEach(item => item.classList.remove("active"));
-      button.classList.add("active");
-      renderHomeGrid(button.dataset.filter);
+function setupShopFilters() {
+  const panel = document.getElementById("shopFilterPanel");
+  const toggle = document.querySelector(".shop-filter-toggle");
+  const sizeSelect = document.getElementById("shopSize");
+  const sortSelect = document.getElementById("shopSort");
+  const clearButton = document.querySelector(".shop-filter-clear");
+  const sizes = [...new Set(PRODUCTS.flatMap(product => Array.isArray(product.sizes) ? product.sizes : []))]
+    .sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }));
+
+  const categoryFromHash = homeCategories.find(category => location.hash === `#${category}Section`);
+  if (categoryFromHash) {
+    panel.querySelectorAll('input[name="shopCategory"]').forEach(input => {
+      input.checked = input.value === categoryFromHash;
     });
+  }
+
+  sizes.forEach(size => {
+    const option = document.createElement("option");
+    option.value = size;
+    option.textContent = size;
+    sizeSelect.append(option);
+  });
+
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    panel.hidden = expanded;
+  });
+  panel.querySelectorAll('input[name="shopCategory"]').forEach(input => input.addEventListener("change", renderHomeGrid));
+  document.querySelectorAll(".shop-categories [data-category]").forEach(button => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.category;
+      panel.querySelectorAll('input[name="shopCategory"]').forEach(input => {
+        input.checked = category === "all" || input.value === category;
+      });
+      renderHomeGrid();
+    });
+  });
+  sizeSelect.addEventListener("change", () => {
+    homeSize = sizeSelect.value;
+    renderHomeGrid();
+  });
+  sortSelect.addEventListener("change", () => {
+    homeSort = sortSelect.value;
+    renderHomeGrid();
+  });
+  clearButton.addEventListener("click", () => {
+    panel.querySelectorAll('input[name="shopCategory"]').forEach(input => { input.checked = true; });
+    sizeSelect.value = "";
+    sortSelect.value = "featured";
+    homeSize = "";
+    homeSort = "featured";
+    renderHomeGrid();
   });
 }
 
@@ -145,8 +217,8 @@ function setupPageMotion() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadProducts();
+  setupShopFilters();
   renderHomeGrid();
   renderLookbook();
-  setupCategoryFilters();
   setupPageMotion();
 });
